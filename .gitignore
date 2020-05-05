@@ -1,0 +1,6 @@
+.DS_Store
+
+docker_volumes/ipfs_data/*
+!docker_volumes/ipfs_data/.gitkeep
+docker_volumes/ipfs_staging/*
+!docker_volumes/ipfs_staging/.gitkeep
