@@ -1,0 +1,28 @@
+# Known Issue:
+# - IPFS node is not working on docker container (specifically, the IPFS gateway is not working). So instead of that we are using local ipfs node.
+
+# Refer https://docs.ipfs.tech/install/run-ipfs-inside-docker/
+
+version: "2" # version of docker compose
+
+services:
+  ipfs-node:
+    build: .
+    image: ipfs-node-image:latest
+    container_name: ipfs-node-container
+    hostname: ipfs-node
+    restart: "no"
+    ports:
+      - "4001:4001" # P2P TCP/QUIC transports: This port is used for the IPFS Swarm protocol, which handles the peer-to-peer network communication between IPFS nodes. It's the main TCP port for IPFS node communication and is crucial for nodes to discover and connect to each other within the IPFS network.
+      - "4001:4001/udp" # P2P TCP/QUIC transports: This port is used for the IPFS Swarm protocol, which handles the peer-to-peer network communication between IPFS nodes.
+      - "127.0.0.1:4325:4325" # Gateway: The IPFS gateway is used to access content stored on IPFS via a web browser.
+      - "127.0.0.1:5001:5001" # RPC API: Port 5001 is used by the IPFS API, allowing various IPFS commands and interactions with your local IPFS node. It's used by IPFS command-line tools or applications to communicate with the IPFS node running on your machine.
+    environment:
+      - IPFS_PATH=/data/ipfs/
+      - IPFS_PROFILE=server
+      - IPFS_MONITORING=false
+      - IPFS_TUTOR=true
+    volumes:
+      - ./docker_volumes/ipfs_data/:/data/ipfs/
+      - ./docker_volumes/ipfs_staging/:/export/
+      - ./container-init.d/:/container-init.d/
